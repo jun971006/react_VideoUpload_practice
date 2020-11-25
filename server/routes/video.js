@@ -49,9 +49,21 @@ router.post('/uploadVideo', (req, res) => {
 
     video.save((err, doc) => {
         if(err) return res.json({success: false, err})
-        res.status(200).json({success:true})
+        res.status(200).json({succe})
         
     })
+})
+
+router.get('/getVideos', (req, res) => {
+    // 비디오 정보들을 몽고디비에서 가져와서 클라이언트에게 전달.    
+    Video.find()
+        .populate('writer')
+        .exec((err, videos) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).json({ success : true, videos})
+        })
+
+
 })
 
 
