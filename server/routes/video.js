@@ -54,6 +54,7 @@ router.post('/uploadVideo', (req, res) => {
     })
 })
 
+// LandingPage에 전시하기 위해서 모든 비디오 정보를 가져오기 위해 사용
 router.get('/getVideos', (req, res) => {
     // 비디오 정보들을 몽고디비에서 가져와서 클라이언트에게 전달.    
     Video.find()
@@ -65,6 +66,25 @@ router.get('/getVideos', (req, res) => {
 
 
 })
+
+
+// VideoDetailPage에서 videoId에 해당하는 Video만 가져오기 위해 사용
+router.post('/getVideoDetail', (req, res) => {
+    // 클라이언트에서 보낸 postID를 통해 video Id를 찾겠다.
+
+    console.log(req.body)
+
+    // populate을 사용하면 매개변수를 통해 mongodb에서 관련 모든 정보를 가져올 수 있다.
+    Video.findOne({ "_id": req.body.videoId })   
+        .populate('writer')
+        .exec((err, VideoDetail) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).json({success : true, VideoDetail})
+        })
+    
+        
+})
+
 
 
 router.post('/thumbnail', (req, res) => {
